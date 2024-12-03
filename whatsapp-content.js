@@ -8,13 +8,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             try {
                 inputField.focus();
                 
-                const selection = window.getSelection();
-                const range = document.createRange();
-                range.selectNodeContents(inputField);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                // Select all existing text first
+                document.execCommand('selectAll');
                 
-                setTimeout(() => document.execCommand('paste'), 100);
+                // Small delay to ensure selection is complete
+                setTimeout(() => {
+                    // Clear selection with delete command
+                    document.execCommand('delete');
+                    
+                    // Now paste the new number
+                    setTimeout(() => document.execCommand('paste'), 50);
+                }, 50);
             } catch (error) {
                 console.error('Error during paste operation:', error);
             }
